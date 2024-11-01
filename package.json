@@ -1,18 +1,35 @@
 {
   "name": "shanyai-events-v4",
   "version": "1.0.0",
-  "main": "expo/AppEntry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.16",
+    "axios": "^1.7.7",
     "expo": "~51.0.28",
+    "expo-constants": "~16.0.2",
+    "expo-linking": "~6.3.1",
+    "expo-router": "~3.5.23",
     "expo-status-bar": "~1.12.1",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
+    "moti": "^0.29.0",
     "react": "18.2.0",
-    "react-native": "0.74.5"
+    "react-dom": "18.2.0",
+    "react-native": "0.74.5",
+    "react-native-safe-area-context": "4.10.5",
+    "react-native-screens": "3.31.1",
+    "react-native-shadow-2": "^7.1.0",
+    "react-native-toast-message": "^2.2.1",
+    "react-native-vision-camera": "^4.5.3",
+    "react-native-web": "~0.19.10",
+    "react-native-svg": "15.2.0",
+    "react-native-reanimated": "~3.10.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
