@@ -2,9 +2,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedbac
 import React, { useEffect } from 'react'
 import {Shadow} from 'react-native-shadow-2';
 import { router } from 'expo-router';
-import {decodeJwt} from '../helpers/decodeJwt';
 
-import EVENTS from '../models/events'
 import { useAuth } from '../context/AuthContext';
 import { useEvents } from '../context/EventsContext';
 

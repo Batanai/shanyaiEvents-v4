@@ -53,14 +53,17 @@ const ScanBarcode = () => {
     }
   })
 
-  useFocusEffect(
-    useCallback(() => {
-      setIsActive(true);
-      return () => {
-        setIsActive(false);
-      };
-    }, [])
-  );
+
+
+  useEffect(() => {
+    setIsActive(true);  // Activate the camera when the component mounts
+  
+    return () => {
+      setIsActive(false);  // Deactivate the camera when the component unmounts
+      console.log('is Active: ', isActive);
+      console.log("Camera is deactivated");
+    };
+  }, []);
 
 
   useEffect(() => {
@@ -120,10 +123,6 @@ const ScanBarcode = () => {
       
       <View style={styles.flashContainer}>
 
-        <Pressable 
-            onPress={() => router.back()}>
-            <AntDesign name='leftcircleo' size={50} color={'white'}/>
-        </Pressable>
         <Ionicons 
           name={"qr-code-sharp"}
           size={30} color={"white"}

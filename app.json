@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "shanyai-events-v4",
+    "name": "Shanyai Events",
     "slug": "shanyai-events-v4",
     "scheme": "shanyai-events",
-    "version": "1.0.0",
+    "version": "2.0.1",
     "orientation": "portrait",
-    "icon": "./assets/shanyai-icon.jpg",
+    "icon": "./assets/shanyai-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/shanyai-splash.jpg",
+      "image": "./assets/shanyai-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
