@@ -18,6 +18,8 @@ export const TicketProvider = ({ children }) => {
       const response = await axios.post(`${BASE_URL}/wp-json/meup/v1/validate_ticket`, ticket);
 
       const data = response.data;
+      console.log('TICKET CONTEXT ', data)
+
       if (data.status === 'SUCCESS') {
         setTicketResponse(data); // Store successful ticket response
         setError(null);
@@ -31,7 +33,7 @@ export const TicketProvider = ({ children }) => {
         });
       } else {
         setError(data.msg || 'Invalid ticket');
-        setTicketResponse(null);
+        setTicketResponse(data);
 
         Toast.show({
           type: 'error',
@@ -43,7 +45,7 @@ export const TicketProvider = ({ children }) => {
       }
     } catch (err) {
       setError('Failed to validate the ticket.');
-      setTicketResponse(null);
+      setTicketResponse(data);
 
       Toast.show({
         type: 'error',

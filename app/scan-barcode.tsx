@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, ActivityIndicator, Pressable, Image, TouchableO
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { Camera, PhotoFile, TakePhotoOptions, useCameraDevice, useCameraPermission, useCodeScanner } from 'react-native-vision-camera';
-import { FontAwesome5, Ionicons } from '@expo/vector-icons'
+import { FontAwesome5, Ionicons, AntDesign } from '@expo/vector-icons'
 // import {resetTicket, sendingTicket, selectTicket} from '@/store/tickets';
 import { useAuth } from '../context/AuthContext';
 import { MotiView, useAnimationState } from 'moti';
@@ -45,7 +45,11 @@ const ScanBarcode = () => {
     codeTypes: ['qr', 'ean-13'],
     onCodeScanned: (codes) => {
       console.log(`Scanned ${codes.length} codes!`)
-      console.log(codes[0]);
+      console.log(codes);
+      if (codes && codes[0].value) {
+        setBarcode(codes[0].value);  // Update state with the scanned value
+        ticketAnimationState.transitionTo('show');
+      }
     }
   })
 
@@ -63,7 +67,7 @@ const ScanBarcode = () => {
     loaderAnimationState.transitionTo('stop');
     ticketAnimationState.transitionTo('hide');
 
-    // dispatch(resetTicket());
+    resetTicket();
   }, [])
 
   useEffect(() => {
@@ -89,9 +93,10 @@ const ScanBarcode = () => {
 
   const ticket = {
     token: token,
-    qrcode: 'barcode',
+    qrcode: barcode,
     eid: `${eId}`,
   };
+  console.log('TICKET ', ticket)
 
   const confirmBooking = () => {
     validateTicket(ticket);
@@ -110,8 +115,15 @@ const ScanBarcode = () => {
         codeScanner={codeScanner}
         style={StyleSheet.absoluteFill}
       />
+
+
       
       <View style={styles.flashContainer}>
+
+        <Pressable 
+            onPress={() => router.back()}>
+            <AntDesign name='leftcircleo' size={50} color={'white'}/>
+        </Pressable>
         <Ionicons 
           name={"qr-code-sharp"}
           size={30} color={"white"}
@@ -165,7 +177,7 @@ const ScanBarcode = () => {
       </MotiView>
 
       {/* booking card */}
-      {ticketResponse[0] && (
+      {ticketResponse && (
         <View style={styles.motiviewBooking}>
           <Shadow>
             <TouchableOpacity
@@ -174,7 +186,8 @@ const ScanBarcode = () => {
                 setTimeout(() => {
                   resetTicket();
                   router.push('/events');
-                }, 3000);
+                }, 2000);
+                setIsActive(false);
               }}>
               <View
                 style={{
@@ -194,7 +207,7 @@ const ScanBarcode = () => {
                 </Text>
                 <Text
                   style={
-                    ticketResponse[0]?.status === 'SUCCESS'
+                    ticketResponse?.status === 'SUCCESS'
                       ? {
                           fontSize: 14,
                           color: 'green',
@@ -208,33 +221,33 @@ const ScanBarcode = () => {
                           paddingBottom: 5,
                         }
                   }>
-                  Status: {ticketResponse[0]?.status}
+                  Status: {ticketResponse?.status}
                 </Text>
                 <Text
                   style={{fontSize: 13, color: 'black', paddingBottom: 5}}>
-                  Message: {ticketResponse[0]?.msg}{' '}
-                  {ticketResponse[0]?.msg.includes('permission') &&
+                  Message: {ticketResponse?.msg}{' '}
+                  {ticketResponse?.msg.includes('permission') &&
                     '- Logout and Login again'}
                 </Text>
                 <Text
                   style={{fontSize: 12, color: 'black', paddingBottom: 5}}>
-                  Name: {ticketResponse[0]?.name_customer}
+                  Name: {ticketResponse?.name_customer}
                 </Text>
                 <Text
                   style={{fontSize: 12, color: 'black', paddingBottom: 5}}>
-                  Seat: {ticketResponse[0]?.seat}
+                  Seat: {ticketResponse?.seat}
                 </Text>
                 <Text
                   style={{fontSize: 12, color: 'black', paddingBottom: 5}}>
-                  CheckedIn Time: {ticketResponse[0]?.checkin_time}
+                  CheckedIn Time: {ticketResponse?.checkin_time}
                 </Text>
                 <Text
                   style={{fontSize: 12, color: 'black', paddingBottom: 5}}>
-                  Event details: {ticketResponse[0]?.e_cal}
+                  Event details: {ticketResponse?.e_cal}
                 </Text>
                 <Text
                   style={
-                    ticketResponse[0]?.status === 'SUCCESS'
+                    ticketResponse?.status === 'SUCCESS'
                       ? {fontSize: 14, color: 'green', fontWeight: 'bold'}
                       : {fontSize: 14, color: 'red', fontWeight: 'bold'}
                   }>
@@ -269,8 +282,8 @@ const styles = StyleSheet.create({
     },
     flashContainer: {
         position: 'absolute',
-        right: 10,
-        top: 50,
+        left: 10,
+        top: 30,
         padding: 10,
         borderRadius: 5,
         backgroundColor: 'rgba(0, 0, 0, 0.40)',

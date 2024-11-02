@@ -17,7 +17,7 @@ const ListTickets = () => {
           title="Scan QR Code"
           onPress={() => router.push({
               pathname: '/scan-barcode',
-              params: {eid: eId}
+              params: {eId: eId}
           })}
         />
       </View>
