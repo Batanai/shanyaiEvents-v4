@@ -44,7 +44,7 @@ if (getRNMinorVersion() >= 75) {
   }
 }
 
-rootProject.name = 'shanyai-events-v4'
+rootProject.name = 'Shanyai Events'
 
 dependencyResolutionManagement {
   versionCatalogs {
