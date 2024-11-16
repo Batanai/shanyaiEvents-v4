@@ -46,10 +46,10 @@ workflows:
         notify:
           success: true
           failure: false
-      google_play:
-        credentials: jjkk
-        track: internal
-        submit_as_draft: true
+      # google_play:
+      #   credentials: jjkk
+      #   track: internal
+      #   submit_as_draft: true
 
 
   react-native-ios:
