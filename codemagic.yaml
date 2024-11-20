@@ -6,8 +6,8 @@ workflows:
     environment:
       android_signing:
         - shanyai-key
-      groups:
-        - google_play
+      # groups:
+      #   - google_play
       vars:
         PACKAGE_NAME: "co.event.scanner"
     scripts:
@@ -57,7 +57,7 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: codemagic
+      app_store_connect: ShanyaiApiKey
     environment:
       ios_signing:
         distribution_type: app_store
