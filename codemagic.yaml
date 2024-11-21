@@ -86,33 +86,40 @@ workflows:
       - name: Increment build number
         script: | 
           cd $CM_BUILD_DIR/ios
+    
           # Set the desired major and minor version
           DESIRED_MAJOR_MINOR_VERSION="2.0"
-
+          
           # Get the latest build number from App Store Connect
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>&1)
 
-          # Extract the patch version (last number) from the current version
+          # Extract the patch version (last segment)
           CURRENT_PATCH_VERSION=$(echo "$LATEST_BUILD_NUMBER" | awk -F '.' '{print $NF}')
 
-          # Ensure the patch version is numeric
+          # Check if the patch version is numeric
           if [[ "$CURRENT_PATCH_VERSION" =~ ^[0-9]+$ ]]; then
-            NEXT_PATCH_VERSION=$(($CURRENT_PATCH_VERSION + 1))
+              NEXT_PATCH_VERSION=$(($CURRENT_PATCH_VERSION + 1))
           else
-            echo "Error: CURRENT_PATCH_VERSION is not numeric. Setting NEXT_PATCH_VERSION to 40."
-            NEXT_PATCH_VERSION=40
+              echo "Error: CURRENT_PATCH_VERSION is not numeric or missing. Defaulting to 40."
+              NEXT_PATCH_VERSION=40
           fi
 
-          # Combine major.minor and patch to create the new version
+          # Combine major, minor, and patch to create the full version
           FULL_VERSION="$DESIRED_MAJOR_MINOR_VERSION.$NEXT_PATCH_VERSION"
 
-          # Update the marketing version (CFBundleShortVersionString) in the project
+          # Log the version details
           echo "Setting marketing version (CFBundleShortVersionString) to $FULL_VERSION"
+          echo "Setting build number (CFBundleVersion) to $FULL_VERSION"
+
+          # Update CFBundleShortVersionString (marketing version)
           agvtool new-marketing-version $FULL_VERSION
 
-          # Update the build number (CFBundleVersion) in the project
-          echo "Setting build number (CFBundleVersion) to $NEXT_PATCH_VERSION"
-          agvtool new-version -all $NEXT_PATCH_VERSION
+          # Update CFBundleVersion (build number) to match the full version
+          agvtool new-version -all $FULL_VERSION
+
+          # Verify the changes
+          echo "Updated version details in Info.plist:"
+          defaults read $CM_BUILD_DIR/ios/$XCODE_SCHEME/Info.plist | grep "CFBundle"
       - name: Build ipa for distribution
         script: | 
           xcode-project build-ipa \
