@@ -105,11 +105,14 @@ workflows:
           fi
 
           # Combine major.minor and patch to create the new version
-          NEW_VERSION="$DESIRED_MAJOR_MINOR_VERSION.$NEXT_PATCH_VERSION"
+          FULL_VERSION="$DESIRED_MAJOR_MINOR_VERSION.$NEXT_PATCH_VERSION"
 
-          # Update the version and build number in the project
-          echo "Setting new version to $NEW_VERSION"
-          agvtool new-marketing-version $DESIRED_MAJOR_MINOR_VERSION
+          # Update the marketing version (CFBundleShortVersionString) in the project
+          echo "Setting marketing version (CFBundleShortVersionString) to $FULL_VERSION"
+          agvtool new-marketing-version $FULL_VERSION
+
+          # Update the build number (CFBundleVersion) in the project
+          echo "Setting build number (CFBundleVersion) to $NEXT_PATCH_VERSION"
           agvtool new-version -all $NEXT_PATCH_VERSION
       - name: Build ipa for distribution
         script: | 

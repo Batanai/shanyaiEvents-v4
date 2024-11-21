@@ -14,7 +14,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "co.event.scanner"
+      "bundleIdentifier": "co.event.scanner",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app does not use location services."
+      }
     },
     "android": {
       "adaptiveIcon": {
