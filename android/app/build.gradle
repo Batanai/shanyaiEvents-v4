@@ -103,7 +103,7 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
-// get version code from the specified property argument `-PversionCode` during the build call
+// get version code from the specified property argument `-PversionCode 1
 def getMyVersionCode = { ->
     return project.hasProperty('versionCode') ? versionCode.toInteger() : 20000
 }
