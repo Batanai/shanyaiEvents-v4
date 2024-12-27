@@ -105,7 +105,7 @@ workflows:
               NEXT_PATCH_VERSION=$((CURRENT_PATCH_VERSION + 1))
           else
               echo "Error: CURRENT_PATCH_VERSION is not numeric or missing. Defaulting to 40."
-              NEXT_PATCH_VERSION=40
+              NEXT_PATCH_VERSION=$((CURRENT_PATCH_VERSION + 1))
           fi
 
           # Combine major, minor, and patch to create the full version
