@@ -90,11 +90,11 @@ workflows:
           # Set the desired major and minor version
           DESIRED_MAJOR_MINOR_VERSION="2.0"
           
-          # Get the latest build number from App Store Connect
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" 2>&1)
+          # Fetch the latest build number from TestFlight
+          LATEST_TESTFLIGHT_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" 2>&1)
 
           # Extract the patch version (last segment)
-          CURRENT_PATCH_VERSION=$(echo "$LATEST_BUILD_NUMBER" | awk -F '.' '{print $NF}')
+          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | awk -F '.' '{print $NF}')
 
           # Check if the patch version is numeric
           if [[ "$CURRENT_PATCH_VERSION" =~ ^[0-9]+$ ]]; then
