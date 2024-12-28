@@ -95,17 +95,21 @@ workflows:
 
           echo "Fetched TestFlight build number: $LATEST_TESTFLIGHT_BUILD_NUMBER"
 
-          # Extract the patch version (last segment)
-          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | awk -F '.' '{print $NF}' | xargs)
+          # Extract the patch version (last segment) and trim whitespace
+          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | awk -F '.' '{print $NF}' | tr -d '[:space:]')
 
-          echo "Extracted patch version: $CURRENT_PATCH_VERSION"
+          echo "Extracted patch version (raw): '$CURRENT_PATCH_VERSION'"
 
-          # Validate and convert CURRENT_PATCH_VERSION to numeric
+          # Debugging: Check for non-printable characters
+          echo "$CURRENT_PATCH_VERSION" | od -c
+
+          # Ensure CURRENT_PATCH_VERSION is numeric
           if [[ "$CURRENT_PATCH_VERSION" =~ ^[0-9]+$ ]]; then
               NEXT_PATCH_VERSION=$((CURRENT_PATCH_VERSION + 1))
+              echo "Converted and incremented patch version: $NEXT_PATCH_VERSION"
           else
               echo "Error: CURRENT_PATCH_VERSION is not numeric or missing. Defaulting to 40."
-              NEXT_PATCH_VERSION=$((CURRENT_PATCH_VERSION + 1))
+              NEXT_PATCH_VERSION=40
           fi
 
           # Combine major, minor, and patch to create the full version
