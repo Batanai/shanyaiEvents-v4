@@ -95,13 +95,10 @@ workflows:
 
           echo "Fetched TestFlight build number: $LATEST_TESTFLIGHT_BUILD_NUMBER"
 
-          # Extract the patch version (last segment) and trim whitespace
-          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | awk -F '.' '{print $NF}' | tr -d '[:space:]')
+          # Extract the patch version (last segment) and sanitize it
+          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | awk -F '.' '{print $NF}' | tr -d '[:space:]' | sed 's/[^0-9]//g')
 
-          echo "Extracted patch version (raw): '$CURRENT_PATCH_VERSION'"
-
-          # Debugging: Check for non-printable characters
-          echo "$CURRENT_PATCH_VERSION" | od -c
+          echo "Sanitized patch version: '$CURRENT_PATCH_VERSION'"
 
           # Ensure CURRENT_PATCH_VERSION is numeric
           if [[ "$CURRENT_PATCH_VERSION" =~ ^[0-9]+$ ]]; then
