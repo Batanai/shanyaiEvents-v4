@@ -95,16 +95,13 @@ workflows:
 
           echo "Fetched TestFlight build number: $LATEST_TESTFLIGHT_BUILD_NUMBER"
 
-          # Debug raw input (showing control characters or hidden formatting)
-          echo "Raw build number (hex dump):"
-          echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | hexdump -C
-
-          # Extract and sanitize the patch version
-          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | hexdump -C | awk -F '.' '{print $NF}' | tr -d '[:space:]' | sed 's/[^0-9]//g')
+          # Extract the build number from the TestFlight version string
+          # Look for the last number after the final dot in the version string
+          CURRENT_PATCH_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | awk -F '.' '{print $NF}')
 
           echo "Extracted patch version (raw): '$CURRENT_PATCH_VERSION'"
 
-          # Ensure CURRENT_PATCH_VERSION is numeric
+          # Ensure the extracted patch version is numeric
           if [[ "$CURRENT_PATCH_VERSION" =~ ^[0-9]+$ ]]; then
               NEXT_PATCH_VERSION=$((CURRENT_PATCH_VERSION + 1))
               echo "Converted and incremented patch version: $NEXT_PATCH_VERSION"
@@ -113,10 +110,12 @@ workflows:
               NEXT_PATCH_VERSION=40
           fi
 
-          # Combine major, minor, and patch to create the full version
+          # Set the desired major and minor version
+          DESIRED_MAJOR_MINOR_VERSION=$(echo "$LATEST_TESTFLIGHT_BUILD_NUMBER" | grep -oE '[0-9]+\.[0-9]+' | head -1)
+
+          # Combine major, minor, and incremented patch version
           FULL_VERSION="$DESIRED_MAJOR_MINOR_VERSION.$NEXT_PATCH_VERSION"
 
-          # Log the version details
           echo "Setting marketing version (CFBundleShortVersionString) to $FULL_VERSION"
           echo "Setting build number (CFBundleVersion) to $FULL_VERSION"
 
